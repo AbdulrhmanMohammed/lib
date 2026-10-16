@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'data/user_data.dart';
 import 'my_drawer.dart';
 
+import 'edit_profile_page.dart';
+
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  final UserData user;
+
+  const ProfilePage({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const MyDrawer(),
+      drawer: MyDrawer(user: user),
       appBar: AppBar(
         title: const Text("Profile"),
         backgroundColor: Colors.blueAccent,
@@ -31,9 +36,9 @@ class ProfilePage extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            const Text(
-              "Abdulrhman",
-              style: TextStyle(
+            Text(
+              user.fullName,
+              style: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
                 color: Colors.blueAccent,
@@ -42,9 +47,9 @@ class ProfilePage extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            const Text(
-              "example@gmail.com",
-              style: TextStyle(
+            Text(
+              user.email,
+              style: const TextStyle(
                 fontSize: 18,
                 color: Colors.black54,
               ),
@@ -55,27 +60,30 @@ class ProfilePage extends StatelessWidget {
             Card(
               elevation: 3,
               child: ListTile(
-                leading: const Icon(Icons.person_outline, color: Colors.blueAccent),
+                leading:
+                const Icon(Icons.person_outline, color: Colors.blueAccent),
                 title: const Text("Username"),
-                subtitle: const Text("abdulrhman123"),
+                subtitle: Text(user.username),
               ),
             ),
 
             Card(
               elevation: 3,
               child: ListTile(
-                leading: const Icon(Icons.email_outlined, color: Colors.blueAccent),
+                leading:
+                const Icon(Icons.email_outlined, color: Colors.blueAccent),
                 title: const Text("Email"),
-                subtitle: const Text("example@gmail.com"),
+                subtitle: Text(user.email),
               ),
             ),
 
             Card(
               elevation: 3,
-              child: ListTile(
-                leading: const Icon(Icons.lock_outline, color: Colors.blueAccent),
-                title: const Text("Account Status"),
-                subtitle: const Text("Active"),
+              child: const ListTile(
+                leading:
+                Icon(Icons.lock_outline, color: Colors.blueAccent),
+                title: Text("Account Status"),
+                subtitle: Text("Active"),
               ),
             ),
 
@@ -83,13 +91,19 @@ class ProfilePage extends StatelessWidget {
 
             ElevatedButton.icon(
               onPressed: () {
-                Navigator.pushNamed(context, "/editProfile");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditProfilePage(user: user),
+                  ),
+                );
               },
               icon: const Icon(Icons.edit),
               label: const Text("Edit Profile"),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 40, vertical: 15),
               ),
             ),
           ],

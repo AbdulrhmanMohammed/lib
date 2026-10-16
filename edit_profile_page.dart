@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
+import 'data/user_data.dart';
 import 'my_drawer.dart';
 
+
 class EditProfilePage extends StatelessWidget {
-  const EditProfilePage({super.key});
+  final UserData user;
+
+  const EditProfilePage({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController usernameController =
+    TextEditingController(text: user.username);
+    final TextEditingController fullNameController =
+    TextEditingController(text: user.fullName);
+    final TextEditingController emailController =
+    TextEditingController(text: user.email);
+
     return Scaffold(
-      drawer: const MyDrawer(),
+      drawer: MyDrawer(user: user),
       appBar: AppBar(
         title: const Text("Edit Profile"),
         backgroundColor: Colors.blueAccent,
@@ -28,6 +39,7 @@ class EditProfilePage extends StatelessWidget {
             const SizedBox(height: 30),
 
             TextField(
+              controller: usernameController,
               decoration: const InputDecoration(
                 prefixIcon: Icon(Icons.person),
                 labelText: "Username",
@@ -38,6 +50,7 @@ class EditProfilePage extends StatelessWidget {
             const SizedBox(height: 20),
 
             TextField(
+              controller: fullNameController,
               decoration: const InputDecoration(
                 prefixIcon: Icon(Icons.badge),
                 labelText: "Full Name",
@@ -48,20 +61,10 @@ class EditProfilePage extends StatelessWidget {
             const SizedBox(height: 20),
 
             TextField(
+              controller: emailController,
               decoration: const InputDecoration(
                 prefixIcon: Icon(Icons.email),
                 labelText: "Email",
-                border: OutlineInputBorder(),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            TextField(
-              obscureText: true,
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.lock),
-                labelText: "Password",
                 border: OutlineInputBorder(),
               ),
             ),
@@ -70,13 +73,17 @@ class EditProfilePage extends StatelessWidget {
 
             ElevatedButton.icon(
               onPressed: () {
-                Navigator.pop(context); // يرجع لصفحة البروفايل
+                // هنا لاحقًا تربطها بـ API أو تخزين محلي
+                Navigator.pop(context);
               },
               icon: const Icon(Icons.save),
               label: const Text("Save Changes"),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blueAccent,
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 15,
+                ),
               ),
             ),
           ],

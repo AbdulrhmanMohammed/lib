@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
+import 'data/user_data.dart';
 import 'my_drawer.dart';
 import 'my_drawer_right.dart';
 
+
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final UserData user;
+
+  const HomePage({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const MyDrawer(),          // الدرو اليسار
-      endDrawer: const MyDrawerRight(),  // الدرو اليمين
+      drawer: MyDrawer(user: user),
+      endDrawer: MyDrawerRight(user: user),
 
       appBar: AppBar(
         title: const Text("Home"),
         backgroundColor: Colors.blueAccent,
-
-        // زر يفتح الدرو اليمين
         actions: [
           Builder(
             builder: (context) => IconButton(
@@ -30,12 +32,8 @@ class HomePage extends StatelessWidget {
 
       body: const Center(
         child: Text(
-          "Welcome to Home Page",
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-            color: Colors.blueAccent,
-          ),
+          "Welcome",
+          style: TextStyle(fontSize: 24),
         ),
       ),
     );

@@ -1,64 +1,65 @@
 import 'package:flutter/material.dart';
-import 'my_drawer.dart';
-import 'my_drawer_right.dart';
+import 'data/product_service.dart';
+import 'product_details_page.dart';
 
-class ProductsPage extends StatelessWidget {
+class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
+
+  @override
+  State<ProductsPage> createState() => _ProductsPageState();
+}
+
+class _ProductsPageState extends State<ProductsPage> {
+  final ProductService productService = ProductService();
+  List<dynamic> products = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadProducts();
+  }
+
+  Future<void> loadProducts() async {
+    final data = await productService.getProducts();
+    setState(() {
+      products = data;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const MyDrawer(),          // الدرو اليسار الأساسي
-      endDrawer: const MyDrawerRight(),   // الدرو اليمين (Products فقط)
-
       appBar: AppBar(
         title: const Text("Products"),
         backgroundColor: Colors.blueAccent,
-        actions: [
-          Builder(
-            builder: (context) => IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openEndDrawer(); // يفتح الدرو اليمين
+      ),
+      body: ListView.builder(
+        itemCount: products.length,
+        itemBuilder: (context, index) {
+          final item = products[index];
+
+          return ListTile(
+            leading: Image.network(
+              item["imageUrl"],
+              width: 60,
+              height: 60,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return const Icon(Icons.image_not_supported, size: 40);
               },
             ),
-          ),
-        ],
-      ),
-
-      body: ListView(
-        padding: const EdgeInsets.all(15),
-        children: const [
-          ProductItem(name: "Laptop", price: "3500 SAR", stock: 12),
-          ProductItem(name: "Keyboard", price: "150 SAR", stock: 40),
-          ProductItem(name: "Mouse", price: "80 SAR", stock: 60),
-          ProductItem(name: "Monitor", price: "900 SAR", stock: 20),
-        ],
-      ),
-    );
-  }
-}
-
-class ProductItem extends StatelessWidget {
-  final String name;
-  final String price;
-  final int stock;
-
-  const ProductItem({
-    super.key,
-    required this.name,
-    required this.price,
-    required this.stock,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 3,
-      child: ListTile(
-        leading: const Icon(Icons.inventory, color: Colors.blueAccent),
-        title: Text(name),
-        subtitle: Text("Price: $price\nStock: $stock"),
+            title: Text(item["productName"]),
+            subtitle: Text("Price: ${item["unitPrice"]}"),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductDetailsPage(product: item),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }

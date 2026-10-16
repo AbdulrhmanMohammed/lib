@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'data/user_data.dart';
+
+import 'products_page.dart';
+import 'category_page.dart';
 
 class MyDrawerRight extends StatelessWidget {
-  const MyDrawerRight({super.key});
+  final UserData user;
+
+  const MyDrawerRight({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -9,31 +15,36 @@ class MyDrawerRight extends StatelessWidget {
       child: Column(
         children: [
           const DrawerHeader(
-            decoration: BoxDecoration(color: Colors.blueAccent),
-            child: Center(
-              child: Text(
-                "Products",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+            child: Text(
+              "Menu",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
           ),
 
           ListTile(
-            leading: const Icon(Icons.inventory, color: Colors.blueAccent),
-            title: const Text("Products"),
-            onTap: () => Navigator.pushNamed(context, "/products"),
+            leading: const Icon(Icons.category),
+            title: const Text("Categories"),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CategoryPage(),
+                ),
+              );
+            },
           ),
 
-          const Spacer(),
-
           ListTile(
-            leading: const Icon(Icons.close, color: Colors.red),
-            title: const Text("Close"),
-            onTap: () => Navigator.pop(context),
+            leading: const Icon(Icons.shopping_cart),
+            title: const Text("Products"),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProductsPage(),
+                ),
+              );
+            },
           ),
         ],
       ),
