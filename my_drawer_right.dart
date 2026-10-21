@@ -7,7 +7,10 @@ import 'category_page.dart';
 class MyDrawerRight extends StatelessWidget {
   final UserData user;
 
-  const MyDrawerRight({super.key, required this.user});
+  const MyDrawerRight(this.userId,{super.key, required this.user});
+
+  final int userId;
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,7 @@ class MyDrawerRight extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const ProductsPage(),
+                  builder: (context) =>  ProductsPage(userId),
                 ),
               );
             },

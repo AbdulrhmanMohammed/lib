@@ -12,47 +12,103 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController =
+  TextEditingController();
+
+  final TextEditingController _passwordController =
+  TextEditingController();
 
   final UserService _userService = UserService();
 
+  bool isLoading = false;
+
   void _login() async {
     String username = _usernameController.text.trim();
-    String password = _passwordController.text.trim();
+    String password = _passwordController.text;
 
     if (username.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("ادخل اسم المستخدم وكلمة المرور")),
+        const SnackBar(
+          content: Text(
+            "ادخل اسم المستخدم وكلمة المرور",
+          ),
+        ),
       );
       return;
     }
 
-    // الاتصال بالـ API
-    final result = await _userService.login(username, password);
+    setState(() {
+      isLoading = true;
+    });
 
-    if (!result["success"]) {
+    try {
+      final userData = await _userService.login(
+        username,
+        password,
+
+      );
+
+      if (!context.mounted) return;
+
+      if (userData != null) {
+        final user = UserData(
+          username: userData["username"] ?? username,
+          fullName:
+          userData["name"] ??
+              userData["username"] ??
+              username,
+          email: userData["email"] ?? "",
+          userId: userData["userid"] ?? 0,
+        );
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(
+              user: user,
+            ),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text(
+              "اسم المستخدم أو كلمة المرور غير صحيحة",
+            ),
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 3),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            backgroundColor: Colors.amber,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!context.mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result["message"])),
+        const SnackBar(
+          content: Text(
+            "فشل الاتصال بالخادم",
+          ),
+          backgroundColor: Colors.red,
+        ),
       );
-      return;
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
+  }
 
-    // البيانات الحقيقية من السيرفر
-    final data = result["data"];
-
-    final user = UserData(
-      username: data["username"],   // السيرفر يرجّع فقط username
-      fullName: data["username"],   // نخليه نفس اليوزر
-      email: "no-email@system.com", // لأن السيرفر ما يرجّع إيميل
-    );
-
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => HomePage(user: user),
-      ),
-    );
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -122,18 +178,37 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 30),
 
                 ElevatedButton(
-                  onPressed: _login,
+                  onPressed:
+                  isLoading
+                      ? null
+                      : _login,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blueAccent,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 50, vertical: 15),
+                      horizontal: 50,
+                      vertical: 15,
+                    ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius:
+                      BorderRadius.circular(10),
                     ),
                   ),
-                  child: const Text(
+                  child:
+                  isLoading
+                      ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child:
+                    CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                      : const Text(
                     "Login",
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
                   ),
                 ),
 
@@ -144,7 +219,9 @@ class _LoginPageState extends State<LoginPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const RegisterPage(),
+                        builder:
+                            (context) =>
+                        const RegisterPage(),
                       ),
                     );
                   },
@@ -153,7 +230,8 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(
                       color: Colors.blueAccent,
                       fontSize: 16,
-                      decoration: TextDecoration.underline,
+                      decoration:
+                      TextDecoration.underline,
                     ),
                   ),
                 ),

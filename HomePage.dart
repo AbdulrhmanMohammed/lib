@@ -13,7 +13,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: MyDrawer(user: user),
-      endDrawer: MyDrawerRight(user: user),
+      endDrawer: MyDrawerRight(user.userId,user: user),
 
       appBar: AppBar(
         title: const Text("Home"),
