@@ -1,9 +1,34 @@
 import 'package:flutter/material.dart';
-import 'login_page.dart';
-import 'register_page.dart';
+import 'package:provider/provider.dart';
+
+import 'App2/Screens/loginScreen.dart';
+
+import 'App2/providers/UserProvider.dart';
+import 'App2/providers/register_provider.dart';
+import 'App2/providers/product_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+
+        ChangeNotifierProvider(
+          create: (_) => UserProvider(),
+        ),
+
+        ChangeNotifierProvider(
+          create: (_) => RegisterProvider(),
+        ),
+
+        ChangeNotifierProvider(
+          create: (_) => ProductProvider(),
+        ),
+
+      ],
+
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -12,13 +37,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Flutter Demo',
+
+      theme: ThemeData(
+        colorScheme:
+        ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+        ),
+      ),
+
       debugShowCheckedModeBanner: false,
-      // أول صفحة تفتح
-      initialRoute: "/login",
-      routes: {
-        "/login": (context) => const LoginPage(),
-        "/register": (context) => const RegisterPage(),
-      },
+
+      home: const LoginScreen(),
     );
   }
 }

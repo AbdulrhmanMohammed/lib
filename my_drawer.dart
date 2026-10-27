@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'data/user_data.dart';
+import 'myOrdersScreen.dart';
 import 'profile_page.dart';
 import 'login_page.dart';
 import 'HomePage.dart';
@@ -69,6 +70,21 @@ class MyDrawer extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (_) => CartScreen(user.userId),
+                ),
+              );
+            },
+          ),
+
+          ListTile(
+            leading: const Icon(Icons.shopping_bag),
+            title: const Text('My Orders'),
+            onTap: () {
+              Navigator.pop(context);
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MyOrdersScreen(user.userId),
                 ),
               );
             },

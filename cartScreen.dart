@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'data/CartService.dart';
+import 'data/OrderService.dart';
 import 'data/conncetion.dart';
 import 'my_drawer.dart';
 import 'my_drawer_right.dart';
@@ -19,8 +20,54 @@ class _CartScreenState extends State<CartScreen> {
 
   late Future<List<dynamic>> cartItems;
 
+  final OrderService orderService = OrderService();
+
+  bool isOrdering = false;
 
 
+
+
+  Future<void> makeOrder() async {
+    if (isOrdering) return;
+
+    setState(() {
+      isOrdering = true;
+    });
+
+    try {
+      final orderId = await orderService.makeOrder(widget.userId);
+
+      if (!mounted) return;
+
+      loadCart();
+
+      setState(() {});
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Order #$orderId created successfully',
+          ),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isOrdering = false;
+        });
+      }
+    }
+  }
   @override
   void initState() {
     super.initState();
@@ -166,17 +213,43 @@ class _CartScreenState extends State<CartScreen> {
 
               Container(
                 padding: const EdgeInsets.all(20),
-                width: double.infinity,
-                child: Text(
-                  'Total: ${total.toStringAsFixed(2)} SAR',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 23,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green,
-                  ),
+                child: Column(
+                  children: [
+                    Text(
+                      'Total: ${total.toStringAsFixed(2)} SAR',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 23,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                      ),
+                    ),
+
+                    const SizedBox(height: 15),
+
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: isOrdering ? null : makeOrder,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.indigo,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: isOrdering
+                            ? const CircularProgressIndicator(
+                          color: Colors.white,
+                        )
+                            : const Text(
+                          'Make Order',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
+
             ],
           );
         },
