@@ -47,7 +47,7 @@ class UserProvider extends ChangeNotifier {
 
   String get email => user?['email']?.toString() ?? '';
 
-  int get Id => (user?['userId'] as num?)?.toInt() ?? 0;
+  int get Id => (user?['userid'] as num?)?.toInt() ?? 0;
 
   bool get isLoggedIn => user != null;
 

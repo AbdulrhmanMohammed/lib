@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../cartScreen.dart';
+import '../../myOrdersScreen.dart';
 import '../providers/UserProvider.dart';
+
 import 'loginScreen.dart';
 import 'productScreen.dart';
 import 'registerScreen.dart';
@@ -67,6 +70,36 @@ class HomeScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (_) => const RegisterScreen(),
+                  ),
+                );
+              },
+            ),
+
+            ListTile(
+              leading: const Icon(Icons.shopping_cart),
+              title: const Text('My Cart'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => CartScreen(
+                      userProvider.Id,
+                    ),
+                  ),
+                );
+              },
+            ),
+
+            ListTile(
+              leading: const Icon(Icons.receipt_long),
+              title: const Text('My Orders'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => MyOrdersScreen(
+                      userProvider.Id,
+                    ),
                   ),
                 );
               },

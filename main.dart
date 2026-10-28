@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 
 import 'App2/Screens/loginScreen.dart';
 
+import 'App2/providers/CartProvider.dart';
+import 'App2/providers/OrderProvider.dart';
 import 'App2/providers/UserProvider.dart';
 import 'App2/providers/register_provider.dart';
 import 'App2/providers/product_provider.dart';
@@ -22,6 +24,14 @@ void main() {
 
         ChangeNotifierProvider(
           create: (_) => ProductProvider(),
+        ),
+
+        ChangeNotifierProvider(
+          create: (_) => CartProvider(),
+        ),
+
+        ChangeNotifierProvider(
+          create: (_) => OrderProvider(),
         ),
 
       ],
