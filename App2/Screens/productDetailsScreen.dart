@@ -14,6 +14,9 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool outOfStock =
+        (product["quantityInStock"] ?? 0) <= 0;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -61,6 +64,19 @@ class ProductDetailsScreen extends StatelessWidget {
               ),
             ),
 
+            const SizedBox(height: 10),
+
+            Text(
+              "Stock: ${product["quantityInStock"]}",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: outOfStock
+                    ? Colors.red
+                    : Colors.green,
+              ),
+            ),
+
             const SizedBox(height: 20),
 
             Text(
@@ -78,7 +94,9 @@ class ProductDetailsScreen extends StatelessWidget {
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                onPressed: () async {
+                onPressed: outOfStock
+                    ? null
+                    : () async {
                   try {
                     final userId = context
                         .read<UserProvider>()
@@ -88,7 +106,7 @@ class ProductDetailsScreen extends StatelessWidget {
                         .read<CartProvider>()
                         .addToCart(
                       userId,
-                        product["productID"],
+                      product["productID"],
                     );
 
                     ScaffoldMessenger.of(
@@ -118,13 +136,17 @@ class ProductDetailsScreen extends StatelessWidget {
                 style:
                 ElevatedButton.styleFrom(
                   backgroundColor:
-                  Colors.indigo,
+                  outOfStock
+                      ? Colors.grey
+                      : Colors.indigo,
                   foregroundColor:
                   Colors.white,
                 ),
-                child: const Text(
-                  "Add To Cart",
-                  style: TextStyle(
+                child: Text(
+                  outOfStock
+                      ? "Out Of Stock"
+                      : "Add To Cart",
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight:
                     FontWeight.bold,

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../data/conncetion.dart';
 import '../providers/CartProvider.dart';
+import '../providers/OrderProvider.dart';
 
 
 class CartScreen extends StatefulWidget {
@@ -38,7 +39,7 @@ class _CartScreenState
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Cart'),
+        title: const Text('My Cart !'),
         backgroundColor: Colors.indigo,
       ),
       body: cartProvider.isLoading
@@ -117,13 +118,57 @@ class _CartScreenState
                           ?.toString() ??
                           '',
                     ),
-                    subtitle:
-                    Text(
-                      '${item['price']} SAR\n'
-                          'Quantity: ${item['quantity']}',
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${item['price']} SAR',
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              onPressed: () async {
+                                await cartProvider.decreaseQuantity(
+                                  widget.userId,
+                                  item['productId'],
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.remove_circle,
+                                color: Colors.red,
+                              ),
+                            ),
+
+                            Text(
+                              '${item['quantity']}',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+
+                            IconButton(
+                              onPressed: () async {
+                                await cartProvider.increaseQuantity(
+                                  widget.userId,
+                                  item['productId'],
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.add_circle,
+                                color: Colors.green,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    isThreeLine:
-                    true,
+
+                    isThreeLine: true,
                     trailing:
                     IconButton(
                       icon:
@@ -164,6 +209,73 @@ class _CartScreenState
                 FontWeight.bold,
                 color:
                 Colors.green,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 10,
+            ),
+            child: SizedBox(
+              width: double.infinity,
+              height: 55,
+              child: ElevatedButton(
+                onPressed: () async {
+                  try {
+                    final orderProvider =
+                    context.read<OrderProvider>();
+
+                    await orderProvider.makeOrder(
+                      widget.userId,
+                    );
+
+                    await cartProvider.loadCart(
+                      widget.userId,
+                    );
+
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Order Created Successfully',
+                          ),
+                          backgroundColor:
+                          Colors.green,
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            e.toString(),
+                          ),
+                          backgroundColor:
+                          Colors.red,
+                        ),
+                      );
+                    }
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.indigo,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                    BorderRadius.circular(15),
+                  ),
+                ),
+                child: const Text(
+                  'Make Order',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ),
