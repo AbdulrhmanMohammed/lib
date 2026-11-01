@@ -104,28 +104,25 @@ class _ProductScreenState
                           8),
                       child:
                       Image.network(
-                        product[
-                        "imageUrl"] ??
-                            "",
+                        product["imageUrl"] ?? "",
                         width: 60,
                         height: 60,
                         fit: BoxFit.cover,
-                        errorBuilder:
-                            (
+                        errorBuilder: (
                             context,
                             error,
                             stackTrace,
                             ) {
+                          print(product["imageUrl"]);
+                          print(error);
+
                           return const Icon(
-                            Icons
-                                .shopping_bag,
-                            size: 40,
-                            color:
-                            Colors
-                                .blue,
+                            Icons.error,
+                            color: Colors.red,
                           );
                         },
-                      ),
+                      )
+
                     ),
                     title: Text(
                       product[

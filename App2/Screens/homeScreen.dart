@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../myOrdersScreen.dart';
 import '../providers/UserProvider.dart';
 
+import 'CategoryScreen.dart';
 import 'cartScreen.dart';
 import 'loginScreen.dart';
 import 'productScreen.dart';
@@ -20,7 +21,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home Page'),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.lightBlueAccent,
       ),
 
       drawer: Drawer(
@@ -38,7 +39,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               decoration: const BoxDecoration(
-                color: Colors.green,
+                color: Colors.lightBlueAccent,
               ),
             ),
 
@@ -58,6 +59,25 @@ class HomeScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (_) => const ProductScreen(),
+                  ),
+                );
+              },
+            ),
+
+            ListTile(
+              leading: const Icon(
+                Icons.category,
+                color: Colors.deepPurple,
+              ),
+              title: const Text(
+                'Categories',
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) =>
+                    const CategoryScreen(),
                   ),
                 );
               },
@@ -135,26 +155,226 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
 
-      body: Center(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
 
-            Text(
-              'Welcome Ya ${userProvider.username}',
-              style: const TextStyle(fontSize: 22),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xff4F46E5),
+                    Color(0xff6366F1),
+                  ],
+                ),
+                borderRadius:
+                BorderRadius.circular(20),
+              ),
+              child: Column(
+                crossAxisAlignment:
+                CrossAxisAlignment.start,
+                children: [
+
+                  const Text(
+                    "Welcome Back 👋",
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 16,
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Text(
+                    userProvider.username,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Text(
+                    "User ID: ${userProvider.Id}",
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+
+                  Text(
+                    userProvider.email,
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
 
-            Text(
-              'User ID: ${userProvider.Id}',
+            GridView(
+              shrinkWrap: true,
+              physics:
+              const NeverScrollableScrollPhysics(),
+              gridDelegate:
+              const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 15,
+              ),
+              children: [
+
+                Card(
+                  color: Colors.blue,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                          const ProductScreen(),
+                        ),
+                      );
+                    },
+                    child: const Column(
+                      mainAxisAlignment:
+                      MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.shopping_bag,
+                          color: Colors.white,
+                          size: 40,
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "Products",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight:
+                            FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                Card(
+                  color: Colors.deepPurple,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                          const CategoryScreen(),
+                        ),
+                      );
+                    },
+                    child: const Column(
+                      mainAxisAlignment:
+                      MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.category,
+                          color: Colors.white,
+                          size: 40,
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "Categories",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight:
+                            FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                Card(
+                  color: Colors.green,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              CartScreen(
+                                userProvider.Id,
+                              ),
+                        ),
+                      );
+                    },
+                    child: const Column(
+                      mainAxisAlignment:
+                      MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.shopping_cart,
+                          color: Colors.white,
+                          size: 40,
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "My Cart",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight:
+                            FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                Card(
+                  color: Colors.orange,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              MyOrdersScreen(
+                                userProvider.Id,
+                              ),
+                        ),
+                      );
+                    },
+                    child: const Column(
+                      mainAxisAlignment:
+                      MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.receipt_long,
+                          color: Colors.white,
+                          size: 40,
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "My Orders",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight:
+                            FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-
-            Text(
-              'Email: ${userProvider.email}',
-            ),
-
           ],
         ),
       ),
