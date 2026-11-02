@@ -34,12 +34,38 @@ class ProductDetailsScreen extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.grey.shade200,
-                borderRadius:
-                BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(15),
               ),
-              child: const Icon(
-                Icons.shopping_bag,
-                size: 100,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.network(
+                  product["imageUrl"] ?? "",
+                  fit: BoxFit.cover,
+                  loadingBuilder: (
+                      context,
+                      child,
+                      loadingProgress,
+                      ) {
+                    if (loadingProgress == null) {
+                      return child;
+                    }
+
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                  errorBuilder: (
+                      context,
+                      error,
+                      stackTrace,
+                      ) {
+                    return const Icon(
+                      Icons.shopping_bag,
+                      size: 100,
+                      color: Colors.indigo,
+                    );
+                  },
+                ),
               ),
             ),
 

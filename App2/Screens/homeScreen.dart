@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home Page'),
+        title: const Text('Inventory System'),
         backgroundColor: Colors.lightBlueAccent,
       ),
 
@@ -216,6 +216,8 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
 
+
+
             const SizedBox(height: 25),
 
             GridView(
@@ -376,8 +378,45 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ],
+
         ),
+
+
       ),
+
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Technical Support'),
+              content: const Text(
+                '+966507557411',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Close'),
+                ),
+              ],
+            ),
+          );
+        },
+        backgroundColor: Colors.green,
+        icon: const Icon(Icons.support_agent),
+        label: const Text('Support'),
+      ),
+      floatingActionButtonLocation:
+      FloatingActionButtonLocation.startFloat,
+
+
     );
+
   }
 }
